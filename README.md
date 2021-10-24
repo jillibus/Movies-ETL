@@ -54,12 +54,12 @@ def extract_transform_load(wiki, kaggle, rating):
     * _repeat until all repairs are done_
 
 1. Upon Inspecting the Wikipedia Data we then:
-2. Plan the repair by creating clean_movie(movie) and modifying the extract_transform_load(wiki,kaggle,ratings) functions, we then:
-3. Created ETL_clean_wiki_movies.ipynb using those 2 functions to clean the Wikipedia data, we then:
-4. Created ETL_clean_kaggle_data.ipynb, modifying the extract_transform_load(wiki,kaggle,ratings) function again, to clean the kaggle and ratings data. 
+2. Plan the repair by creating _function_ **clean_movie(movie)** and modifying _function_ **extract_transform_load(wiki,kaggle,ratings)**, we then:
+3. Created _ETL_clean_wiki_movies.ipynb_ using those 2 functions to clean the Wikipedia data, we then:
+4. Created _ETL_clean_kaggle_data.ipynb_, modifying the _function_ **extract_transform_load(wiki,kaggle,ratings)** again, to clean the kaggle and ratings data. 
 
 **STEP 3 above ETL_clean_wiki_movies.ipynb**
-* This is the new _Function_ **clean_movie(movie)** inside ETL_clean_wiki_movies.ipynb and ETL_clean_kaggle_data.ipynb.
+* We called the _function_ **clean_movie(movies)**, then we:
 ```
 def clean_movie(movie):
     # Read in the kaggle metadata and MovieLens ratings CSV files as Pandas DataFrames.
@@ -103,7 +103,7 @@ def clean_movie(movie):
         
     return movie
 ```
-2. For ETL_clean_wiki_movies.ipynb, we modified the _Function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Wikipedia Data' with the following:
+* Modified the _function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Wikipedia Data' with the following:
     1. box_office - set each column to the same $ format using regular expressions
     2. budget - set each column to the same $ format using regular expressions
     3. release_date - set each column to the same date format using regular expressions
@@ -201,8 +201,8 @@ def extract_transform_load(wiki, kaggle, ratings):
 ```
 ---
 **STEP 4 above ETL_clean_kaggle_movies.ipynb**
-1. We called the _function_ **clean_movie(movies)**, then we:
-2. Modified the _function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Kaggle and Ratings Data' to clean the data for:
+* We called the _function_ **clean_movie(movies)**, then we:
+* Modified the _function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Kaggle and Ratings Data' to clean the data for:
     1. Corrected data types - on columns: budget, id, popularity, release_date 
     3. Created new DataFrame: movies_df: from wiki_movies_df with kaggle_metadata 
     4. Dropped duplicate columns - title_wiki, release_date_wiki, Language, Production company(s)
