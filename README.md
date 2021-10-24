@@ -341,17 +341,19 @@ engine = create_engine(db_string)
 ```
 ### RESULTS
 
-Our PostgreSQL Database now holds 3 new tables, with clean data, transformed into readable formats for the Hackathon. Each table within the movie_data database, movies, movies_data and ratings are now ready for the challenge set forth by Amazing Prime.  The hackers will all be given the same set of data, in the same format, from the same location, so there is no bias or advantage to anyone.   There is also a set dataset so Amazing Prime can also do their own analysis and see which Hacker from the challenge meets their idea of what Amazing Prime believes are the up and coming movies to purchase quickly.
+* Our PostgreSQL Database now holds 3 new tables, with clean data, transformed into readable formats for the Hackathon. 
+* Each table within the movie_data database, movies, movies_data and ratings are now ready for the challenge set forth by Amazing Prime.  
+* The hackers will all be given the same set of data, in the same format, from the same location, so there is no bias or advantage to anyone.   
+* There is also a set dataset so Amazing Prime can also do their own analysis and see which Hacker from the challenge meets their idea of what Amazing Prime believes are the up and coming movies to purchase quickly.
 
 ### Movies
-![movies](images/movies.png)
+![movies](images/pgAdmin-movies.png)
 
 ---
 ### Movies Data
-![movies_data](images/movies_data.png)
-![logo](images/Module8_logo.png)
+![movies_data](images/pgAdmin-movies_data.png)
 
 ---
 ### Ratings
-![ratings](images/ratings.png)
+![ratings](images/pgAdmin-ratings.png)
 
