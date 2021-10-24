@@ -295,3 +295,48 @@ def extract_transform_load(wiki, kaggle, ratings):
 ---
 ### LOAD
 <img src="images/ETL-Load.png" width=35% height=35% />
+
+1. The final step in ETL is Load, we created a new file ETL_create_database.ipynb.
+2. Pre-setup steps were needed:
+    1. Create a PostgreSQL database called 'movie_data'
+    2. Know the "db_password" and "server IP" and "port" of this database
+    3. Place the db_password inside your config.py file
+    4. Place config.py inside your .gitignore file
+    5. Ensure you have the PostgreSQL database online and you have access to it
+    6. Place the proper imports/config information at the top of your ETL_create_database.ipynb file.
+3. Here is an example of what you need at the top of your ETL_create_database.ipynb file.
+
+```
+import psycopg2
+from config import db_password
+from sqlalchemy import create_engine
+db_string = f"postgresql://postgres:{db_password}@127.0.0.1:5433/movie_data"
+engine = create_engine(db_string)
+```
+
+4. We also had to make a final modification to our _function_ **extract_transform_load(wiki, kaggle, ratings)** 
+```
+    movies_with_ratings_df[rating_counts.columns] = movies_with_ratings_df[rating_counts.columns].fillna(0)
+    
+    # Move movies_df DataFrame to Postgresql
+    # using if_exists='replace' will create the wikipedia/kaggle table data and if_exists, will replace the data if already in the table
+    movies_df.to_sql(name='movies_data', con=engine, if_exists='replace', index=False)
+    
+    rows_imported = 0
+    start_time = time.time()
+    # chunksize is needed as ratings_file is very large and it needs to be broken up to complete
+    for data in pd.read_csv(ratings_file, chunksize=1000000):
+
+        # print out the range of rows that are being imported
+        print(f'importing rows {rows_imported} to {rows_imported + len(data)}...', end='')
+
+        # using if_exists='append' will allow the process to continue if the data is already in the table
+        data.to_sql(name='ratings', con=engine, if_exists='append', index=False)
+
+        # increment the number of rows imported by the chunksize
+        rows_imported += len(data)
+
+        # print that the rows have finished importing
+        print(f'Done. {time.time() - start_time} total seconds elapsed.')
+```
+
