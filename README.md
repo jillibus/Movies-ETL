@@ -346,14 +346,36 @@ engine = create_engine(db_string)
 * The hackers will all be given the same set of data, in the same format, from the same location, so there is no bias or advantage to anyone.   
 * There is also a set dataset so Amazing Prime can also do their own analysis and see which Hacker from the challenge meets their idea of what Amazing Prime believes are the up and coming movies to purchase quickly.
 
-### Movies
+#### Movies
 ![movies](images/pgAdmin-movies.png)
 
 ---
-### Movies Data
+#### Movies Data
 ![movies_data](images/pgAdmin-movies_data.png)
 
 ---
-### Ratings
+#### Ratings
 ![ratings](images/pgAdmin-ratings.png)
 
+---
+### Summary
+
+This overall project was definitally a learning experience as the regular expressions were put to the test since there was a great deal of differences in several of the columns.  The iterative process of breaking down the transform step into evaluating one column at a time, and then each data set at a time, definitely helped with the ability to look at the data in pieces.  The reuse of _function_ **extract_transform_load(wiki,kaggle,ratings)** really helped in seeing how we could repeat the use of a function for multiple data sets.
+The exercise of evaluating Wikipedia vs MovieLens was what I found most helpful when working through the columns, and making the following chart before we even started creating any functions:
+```
+# Competing data:
+# Wiki                     Movielens                Resolution
+#--------------------------------------------------------------------------
+# title_wiki               title_kaggle             Drop Wikipedia
+# running_time             runtime                  Keep Kaggle; fill in zeros with Wikipedia
+# budget_wiki              budget_kaggle            Keep Kaggle; fill in zeros with Wikipedia
+# box_office               revenue                  Keep Kaggle; fill in zeros with Wikipedia
+# release_date_wiki        release_date_kaggle      Drop Wikipedia
+# Language                 original_language        Drop Wikipedia
+# Production company(s)    production_companies     Drop Wikipedia
+```
+Just that bit of sitting down and going through each data set, helped slow down the process into steps for me to know how to go forward.
+
+Later on loading the data into the database, was easy for me, as I am a DBA, but the comparison of the number of rows in the DataFrames vs the tables, to me, was vital to know if your process was successful.
+
+Jill Hughes
