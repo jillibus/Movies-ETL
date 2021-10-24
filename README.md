@@ -376,6 +376,4 @@ The exercise of evaluating Wikipedia vs MovieLens was what I found most helpful 
 ```
 Just that bit of sitting down and going through each data set, helped slow down the process into steps for me to know how to go forward.
 
-Later on loading the data into the database, was easy for me, as I am a DBA, but the comparison of the number of rows in the DataFrames vs the tables, to me, was vital to know if your process was successful.
-
 Jill Hughes
