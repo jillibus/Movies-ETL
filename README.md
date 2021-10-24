@@ -18,8 +18,10 @@ My job is to assist Britta in creating these data sets and loading the SQL Table
 The Extract-Transform-Load process I will follow for this analysis will be as follows:
 
 ---
+### EXTRACT
 <img src="images/ETL-Extract.png" width=35% height=35% />
-1. Extract the Wikipedia, Kaggle and Rating Data
+1. Extract the Wikipedia, Kaggle and Rating Data, we created the initial _function_ **extract_transform_load(wiki, kaggle, ratings)**
+2. We created ETL_function_test.ipynb to extract the files.
 
 * This will be performed by the _Function_ **extract_transform_load(wiki, kaggle, rating)**
 ```
@@ -40,6 +42,7 @@ def extract_transform_load(wiki, kaggle, rating):
 ```
 
 ---
+### TRANSFORM
 <img src="images/ETL-Transform.png" width=35% height=35% />
 
 <img src="images/Inspect-Plan-Execute.png" width=35% height=35% />
@@ -50,9 +53,13 @@ def extract_transform_load(wiki, kaggle, rating):
     * _execute the repair_
     * _repeat until all repairs are done_
 
-1. Clean the Wikipedia and Kaggle Data
+1. Upon Inspecting the Wikipedia Data we then:
+2. Plan the repair by creating clean_movie(movie) and modifying the extract_transform_load(wiki,kaggle,ratings) functions, we then:
+3. Created ETL_clean_wiki_movies.ipynb using those 2 functions to clean the Wikipedia data, we then:
+4. Created ETL_clean_kaggle_data.ipynb, modifying the extract_transform_load(wiki,kaggle,ratings) function again, to clean the kaggle and ratings data. 
 
-* This will be performed by the _Function_ **clean_movie(movie)**
+**STEP 3 above ETL_clean_wiki_movies.ipynb**
+* This is the new _Function_ **clean_movie(movie)** inside ETL_clean_wiki_movies.ipynb and ETL_clean_kaggle_data.ipynb.
 ```
 def clean_movie(movie):
     # Read in the kaggle metadata and MovieLens ratings CSV files as Pandas DataFrames.
@@ -96,33 +103,15 @@ def clean_movie(movie):
         
     return movie
 ```
-2. Recall the _Function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Wikipedia Data' to clean the data for:
+2. For ETL_clean_wiki_movies.ipynb, we modified the _Function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Wikipedia Data' with the following:
     1. box_office - set each column to the same $ format using regular expressions
     2. budget - set each column to the same $ format using regular expressions
     3. release_date - set each column to the same date format using regular expressions
     4. running_time - set each column to the same time format using regular expressions
 ```
-# 2. Add the function that takes in three arguments;
-# Wikipedia data, Kaggle metadata, and MovieLens rating data (from Kaggle)
 def extract_transform_load(wiki, kaggle, ratings):
-    # 2. Read in the kaggle metadata and MovieLens ratings CSV files as Pandas DataFrames.
-    kaggle_metadata = pd.read_csv(kaggle, low_memory=False)
-    ratings = pd.read_csv(ratings)     
 
-    # Open and read the Wikipedia data JSON file.
-    with open(wiki, mode='r') as file:
-        wiki_movies_raw = json.load(file)
-    
-    # 3. Write a list comprehension to filter out TV shows.
-    wiki_movies = [movie for movie in wiki_movies_raw
-        if 'No. of episodes' not in movie]
-
-    # 4. Write a list comprehension to iterate through the cleaned wiki movies list
-    # and call the clean_movie function on each movie.
-    clean_movies = [clean_movie(movie) for movie in wiki_movies]
-
-    # 5. Read in the cleaned movies list from Step 4 as a DataFrame.
-    wiki_movies_df = pd.DataFrame(clean_movies)
+### >>> START HERE WITH MODIFICATIONS <<<< ####
 
     # 6. Write a try-except block to catch errors while extracting the IMDb ID using a regular expression 
     #    string and dropping any imdb_id duplicates. If there is an error, capture and print the exception.
@@ -210,7 +199,10 @@ def extract_transform_load(wiki, kaggle, ratings):
     # Return three variables. The first is the wiki_movies_df DataFrame
     return wiki_movies_df, kaggle_metadata, ratings
 ```
-2. Recall the _Function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Kaggle and Ratings Data' to clean the data for:
+---
+**STEP 4 above ETL_clean_kaggle_movies.ipynb**
+1. We called the _function_ **clean_movie(movies)**, then we:
+2. Modified the _function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Kaggle and Ratings Data' to clean the data for:
     1. Corrected data types - on columns: budget, id, popularity, release_date 
     3. Created new DataFrame: movies_df: from wiki_movies_df with kaggle_metadata 
     4. Dropped duplicate columns - title_wiki, release_date_wiki, Language, Production company(s)
@@ -221,11 +213,10 @@ def extract_transform_load(wiki, kaggle, ratings):
     9. Transform and merge the ratings DataFrame
 
 ```
-# 2. Add the function that takes in three arguments;
-# Wikipedia data, Kaggle metadata, and MovieLens rating data (from Kaggle)
 def extract_transform_load(wiki, kaggle, ratings):
     ... Start after # 16. Clean the running time column in the wiki_movies_df DataFrame
     
+    ### >>> START HERE WITH MODIFICATIONS <<<< ####
     # Return three variables. The first is the wiki_movies_df DataFrame
     # return wiki_movies_df, kaggle_metadata, ratings
      
@@ -300,3 +291,7 @@ def extract_transform_load(wiki, kaggle, ratings):
     
     movies_with_ratings_df = pd.merge(movies_df, rating_counts, left_on='kaggle_id', right_index=True, how='left')
     movies_with_ratings_df[rating_counts.columns] = movies_with_ratings_df[rating_counts.columns].fillna(0)
+    
+---
+### LOAD
+<img src="images/ETL-Load.png" width=35% height=35% />
