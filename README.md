@@ -210,3 +210,93 @@ def extract_transform_load(wiki, kaggle, ratings):
     # Return three variables. The first is the wiki_movies_df DataFrame
     return wiki_movies_df, kaggle_metadata, ratings
 ```
+2. Recall the _Function_ **extract_transform_load(wiki, kaggle, rating)** for the 'Kaggle and Ratings Data' to clean the data for:
+    1. Corrected data types - on columns: budget, id, popularity, release_date 
+    3. Created new DataFrame: movies_df: from wiki_movies_df with kaggle_metadata 
+    4. Dropped duplicate columns - title_wiki, release_date_wiki, Language, Production company(s)
+    5. Filled in missing data into kaggle columns from wiki columns
+    6. Filter the movies DataFrame for specific columns
+    7. Remove column - video - found the column has NaN for all rows
+    8. Rename the columns in the movies DataFrame
+    9. Transform and merge the ratings DataFrame
+
+```
+# 2. Add the function that takes in three arguments;
+# Wikipedia data, Kaggle metadata, and MovieLens rating data (from Kaggle)
+def extract_transform_load(wiki, kaggle, ratings):
+    ... Start after # 16. Clean the running time column in the wiki_movies_df DataFrame
+    
+    # Return three variables. The first is the wiki_movies_df DataFrame
+    # return wiki_movies_df, kaggle_metadata, ratings
+     
+    # 2. Clean the Kaggle metadata.
+    kaggle_metadata = kaggle_metadata[kaggle_metadata['adult'] == 'False'].drop('adult',axis='columns')
+    # set video to True
+    kaggle_metadata['video'] = kaggle_metadata['video'] == 'True'
+    # convert dtypes on budget, id, popularity, release_dt
+    kaggle_metadata['budget'] = kaggle_metadata['budget'].astype(int)
+    kaggle_metadata['id'] = pd.to_numeric(kaggle_metadata['id'], errors='raise')
+    kaggle_metadata['popularity'] = pd.to_numeric(kaggle_metadata['popularity'], errors='raise')
+    kaggle_metadata['release_date'] = pd.to_datetime(kaggle_metadata['release_date'])
+    
+    # 3. Merged the two DataFrames into the movies DataFrame.
+    movies_df = pd.merge(wiki_movies_df, kaggle_metadata, on='imdb_id', suffixes=['_wiki','_kaggle'])
+
+    # 4. Drop unnecessary columns from the merged DataFrame.
+    movies_df.drop(columns=['title_wiki','release_date_wiki','Language','Production company(s)'], inplace=True)
+
+    # 5. Add in the function to fill in the missing Kaggle data.
+    def fill_missing_kaggle_data(df, kaggle_column, wiki_column):
+        df[kaggle_column] = df.apply(
+            lambda row: row[wiki_column] if row[kaggle_column] == 0 else row[kaggle_column], axis = 1)
+        df.drop(columns=wiki_column, inplace=True)
+
+    # 6. Call the function in Step 5 with the DataFrame and columns as the arguments.
+    fill_missing_kaggle_data(movies_df, 'runtime', 'running_time')
+    fill_missing_kaggle_data(movies_df, 'budget_kaggle', 'budget_wiki')
+    fill_missing_kaggle_data(movies_df, 'revenue', 'box_office')
+
+    # 7. Filter the movies DataFrame for specific columns.
+    for col in movies_df.columns:
+        lists_to_tuples = lambda x: tuple(x) if type(x) == list else x
+        value_counts = movies_df[col].apply(lists_to_tuples).value_counts(dropna=False)
+        num_values = len(value_counts)
+        if num_values == 1:
+            print(col)
+            
+    movies_df.drop(columns=['video'], inplace=True)
+
+    # 8. Rename the columns in the movies DataFrame.
+    movies_df = movies_df.loc[:, ['imdb_id','id','title_kaggle','original_title','tagline','belongs_to_collection','url','imdb_link',
+        'runtime','budget_kaggle','revenue','release_date_kaggle','popularity','vote_average','vote_count',
+        'genres','original_language','overview','spoken_languages','Country',
+        'production_companies','production_countries','Distributor',
+        'Producer(s)','Director','Starring','Cinematography','Editor(s)','Writer(s)','Composer(s)','Based on'
+        ]]
+
+    movies_df.rename({'id':'kaggle_id',
+              'title_kaggle':'title',
+              'url':'wikipedia_url',
+              'budget_kaggle':'budget',
+              'release_date_kaggle':'release_date',
+              'Country':'country',
+              'Distributor':'distributor',
+              'Producer(s)':'producers',
+              'Director':'director',
+              'Starring':'starring',
+              'Cinematography':'cinematography',
+              'Editor(s)':'editors',
+              'Writer(s)':'writers',
+              'Composer(s)':'composers',
+              'Based on':'based_on'
+             }, axis='columns', inplace=True)
+    
+    # 9. Transform and merge the ratings DataFrame.
+    rating_counts = ratings.groupby(['movieId','rating'], as_index=False).count() \
+                .rename({'userId':'count'}, axis=1) \
+                .pivot(index='movieId',columns='rating', values='count')
+    
+    rating_counts.columns = ['rating_' + str(col) for col in rating_counts.columns]
+    
+    movies_with_ratings_df = pd.merge(movies_df, rating_counts, left_on='kaggle_id', right_index=True, how='left')
+    movies_with_ratings_df[rating_counts.columns] = movies_with_ratings_df[rating_counts.columns].fillna(0)
