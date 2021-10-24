@@ -41,3 +41,13 @@ def extract_transform_load(wiki, kaggle, rating):
 
 ---
 <img src="images/ETL-Transform.png" width=35% height=35% />
+
+<img src="images/Inspect-Plan-Execute.png" width=35% height=35% />
+
+* _The first part of the Transform Process is to __inspect, plan, execute__
+    * _inspect the data_
+    * _plan the way to fix the data_
+    * _execute the repair_
+    * _repeat until all repairs are done_
+    
+ 
