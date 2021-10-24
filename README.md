@@ -20,10 +20,10 @@ The Extract-Transform-Load process I will follow for this analysis will be as fo
 ---
 ### EXTRACT
 <img src="images/ETL-Extract.png" width=35% height=35% />
-1. Extract the Wikipedia, Kaggle and Rating Data, we created the initial _function_ **extract_transform_load(wiki, kaggle, ratings)**
+
+1. Extract the Wikipedia, Kaggle and Rating Data, we created the initial _function_ **extract_transform_load(wiki, kaggle, ratings)** 
 2. We created ETL_function_test.ipynb to extract the files.
 
-* This will be performed by the _Function_ **extract_transform_load(wiki, kaggle, rating)**
 ```
 def extract_transform_load(wiki, kaggle, rating):
     # 2. Read in the kaggle metadata and MovieLens ratings CSV files as Pandas DataFrames.
@@ -54,8 +54,8 @@ def extract_transform_load(wiki, kaggle, rating):
     * _repeat until all repairs are done_
 
 1. Upon Inspecting the Wikipedia Data we then:
-2. Plan the repair by creating _function_ **clean_movie(movie)** and modifying _function_ **extract_transform_load(wiki,kaggle,ratings)**, we then:
-3. Created _ETL_clean_wiki_movies.ipynb_ using those 2 functions to clean the Wikipedia data, we then:
+2. Plan the repair by creating _function_ **clean_movie(movie)** and modifying _function_ **extract_transform_load(wiki,kaggle,ratings)**
+3. Created _ETL_clean_wiki_movies.ipynb_ using those 2 functions to clean the Wikipedia data
 4. Created _ETL_clean_kaggle_data.ipynb_, modifying the _function_ **extract_transform_load(wiki,kaggle,ratings)** again, to clean the kaggle and ratings data. 
 
 **STEP 3 above ETL_clean_wiki_movies.ipynb**
@@ -291,7 +291,7 @@ def extract_transform_load(wiki, kaggle, ratings):
     
     movies_with_ratings_df = pd.merge(movies_df, rating_counts, left_on='kaggle_id', right_index=True, how='left')
     movies_with_ratings_df[rating_counts.columns] = movies_with_ratings_df[rating_counts.columns].fillna(0)
-    
+```    
 ---
 ### LOAD
 <img src="images/ETL-Load.png" width=35% height=35% />
