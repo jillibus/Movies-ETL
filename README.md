@@ -11,7 +11,7 @@ My job is to assist Britta in creating these data sets and loading the SQL Table
 
 ## Resources
 * Data Sources: wikipedia-movies.json, movies_metadata.csv, ratings.csv
-* Softweare: Python 3.7.10, Jupyter Notebook 6.3.0, PostgreSQL 14, pgAdmin 4
+* Software: Python 3.7.10, Jupyter Notebook 6.3.0, PostgreSQL 14, pgAdmin 4
 
 ## ETL Process
 <img src="images/ETL.png" width=35% height=35% />
